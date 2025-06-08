@@ -25,7 +25,7 @@ export function useSearchSuperheros(params: Params) {
     queryKey: superheroKeys.search(query),
     queryFn: async () => {
       if (!query.trim()) {
-        return { results: [], 'results-for': '' };
+        return { results: [], 'results-for': '' } as ResponsePayload;
       }
 
       const response = await fetch(
@@ -38,17 +38,19 @@ export function useSearchSuperheros(params: Params) {
         }
       );
 
-      const data = await response.json() as ResponseSuccess<Superhero> | ResponseError;
+      const data = await response.json() as ResponseSuccess<ResponsePayload> | ResponseError;
 
       if (data.response === 'error') {
         throw new Error(data.error || 'Failed to search superheroes');
       }
 
-      return data as ResponseSuccess<Superhero>;
+      return data as ResponseSuccess<ResponsePayload>;
     },
     enabled: Boolean(query.trim()),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     retry: false,
   });
 }

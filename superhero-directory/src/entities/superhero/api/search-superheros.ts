@@ -1,4 +1,3 @@
-/*
 import { config } from '~shared/config';
 import { ResponseError, ResponseSuccess } from '~shared/response';
 
@@ -22,6 +21,37 @@ export function useSearchSuperheros(params: Params) {
 
   // Method documentation: https://superheroapi.com/#name
   // Example call: GET https://superheroapi.com/api/${access-token}/search/${superhero-name}
-  return useQuery({});
+  return useQuery({
+    queryKey: superheroKeys.search(query),
+    queryFn: async () => {
+      if (!query.trim()) {
+        return { results: [], 'results-for': '' };
+      }
+
+      const response = await fetch(
+        `${config.apiHost}/${config.apiToken}/search/${encodeURIComponent(query)}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          mode: 'cors'
+        }
+      );
+
+      const data = await response.json() as ResponseSuccess<Superhero> | ResponseError;
+
+      if (data.response === 'error') {
+        if (data.error === 'character with given name not found') {
+          return { results: [], 'results-for': query };
+        }
+        throw new Error(data.error || 'Failed to search superheroes');
+      }
+
+      return data as ResponseSuccess<Superhero>;
+    },
+    enabled: Boolean(query.trim()),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: false,
+  });
 }
- */

@@ -28,7 +28,7 @@ export function HomePage() {
 
       {!error && !isLoading && heroes.length === 0 && searchQuery && (
         <div className="text-center text-gray-500">
-          {error}
+          No heroes found
         </div>
       )}
 

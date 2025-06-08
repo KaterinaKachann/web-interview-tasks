@@ -41,9 +41,6 @@ export function useSearchSuperheros(params: Params) {
       const data = await response.json() as ResponseSuccess<Superhero> | ResponseError;
 
       if (data.response === 'error') {
-        if (data.error === 'character with given name not found') {
-          return { results: [], 'results-for': query };
-        }
         throw new Error(data.error || 'Failed to search superheroes');
       }
 

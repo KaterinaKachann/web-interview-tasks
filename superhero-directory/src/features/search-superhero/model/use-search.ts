@@ -51,7 +51,7 @@ export function useSearch(): UseSearchResult {
 
   return {
     isLoading,
-    error: error?.message || null,
+    error: error ? error.message : null,
     heroes,
     search,
     searchQuery

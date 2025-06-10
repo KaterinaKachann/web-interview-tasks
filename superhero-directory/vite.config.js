@@ -16,8 +16,8 @@ export default defineConfig(() => {
       proxy: {
         '/api-proxy': {
           target: 'https://superheroapi.com',
-          rewrite: (path) => path.replace(/^\/api-proxy/, ''),
           changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api-proxy/, '/api'),
           cookieDomainRewrite: '',
           followRedirects: true,
         },
@@ -25,6 +25,16 @@ export default defineConfig(() => {
     },
     preview: {
       port: 3000,
+      proxy: {
+        '/api-proxy': {
+          target: 'https://superheroapi.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api-proxy/, '/api'),
+          secure: false,
+          cookieDomainRewrite: '',
+          followRedirects: true,
+        },
+      },
     },
   };
 });
